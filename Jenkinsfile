@@ -32,5 +32,10 @@ pipeline {
                 junit 'api-gateway/target/surefire-reports/*.xml'
             }
         }
+        stage('test cmd') {
+            steps {
+                sh "echo pwd"
+            }
+        }
     }
 }
