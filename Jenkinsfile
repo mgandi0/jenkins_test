@@ -1,44 +1,25 @@
 pipeline {
     agent any
     
-    tools {
-        // Install the Maven version configured as "M3" and add it to the path.
-        maven "MVN3"
+    environment {
+        TRAINING = "devops"
+        TOPIC = "jenkins"
     }
-
+    
     stages {
-        stage('pull scm') {
+        stage('local') {
+            environment {
+                TOPIC = "cicd"
+            }
+            
             steps {
-                // Get some code from a GitHub repository
-                git credentialsId: 'github', url: 'git@github.com:{your github id}/jenkins_test.git'
+                sh "echo training is ${TRAINING} and topic is ${TOPIC}"
             }
         }
         
-        stage('Build') {
+        stage('global') {
             steps {
-                sh "mvn -Dmaven.test.failure.ignore=true -f api-gateway/ clean package"
-            }
-                            
-        }
-        
-        stage('archive') {
-            steps {
-                archiveArtifacts artifacts: 'api-gateway/target/*.jar', followSymlinks: false
-            }
-        }
-        
-        stage('publish test result') {
-            steps {
-                junit 'api-gateway/target/surefire-reports/*.xml'
-            }
-        }
-        
-        stage('test') {
-            agent {
-                label 'linux'
-            }
-            steps {
-                sh "echo testing"
+                sh "echo training is ${TRAINING} and topic is ${TOPIC}"
             }
         }
     }
